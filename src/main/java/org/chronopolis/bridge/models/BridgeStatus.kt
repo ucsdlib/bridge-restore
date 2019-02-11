@@ -1,0 +1,25 @@
+package org.chronopolis.bridge.models
+
+/**
+ * Status a Bridge item can have
+ *
+ * @since 1.0
+ * @author shake
+ */
+enum class BridgeStatus {
+    ERROR,
+    CANCELLED,
+    INITIALIZED,
+
+    WAITING_FOR_DPN,
+    DPN_TRANSFER_COMPLETE,
+    TRANSFERRING_TO_DURACLOUD,
+    TRANSFERRING_FROM_DURACLOUD,
+    VERIFYING_TRANSFERRED_CONTENT,
+    TRANSFER_TO_DURACLOUD_COMPLETE,
+    FAILED_TO_TRANSFER_FROM_DURACLOUD,
+
+    CLEANING_UP,
+    SNAPSHOT_COMPLETE,
+    RESTORATION_COMPLETE
+}
