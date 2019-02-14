@@ -16,14 +16,15 @@ class BridgeNotification(val bridge: Bridge) {
      * into Duracloud
      *
      * @param result A successful [Result] from staging data
+     * @return The updated [Result] from trying to notify the [Bridge]
      */
-    fun notify(result: Result.Success) {
+    fun notify(result: Result.Success): Result {
         val restore = result.data.restore
         val errorMsg = "Error completing Bridge API call"
         val exceptionMsg = "Exception communicating with the Bridge"
 
         val call = bridge.completeRestoreById(RestoreId(restore.restorationId))
-        try {
+        return try {
             val response = call.execute()
             if (response.isSuccessful) {
                 Result.Success(result.data)
