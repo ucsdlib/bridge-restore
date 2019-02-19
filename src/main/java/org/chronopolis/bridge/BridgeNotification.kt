@@ -1,5 +1,6 @@
 package org.chronopolis.bridge
 
+import org.chronopolis.bridge.config.DuracloudConfig
 import org.chronopolis.bridge.models.RestoreId
 import org.chronopolis.bridge.models.Result
 
@@ -9,7 +10,7 @@ import org.chronopolis.bridge.models.Result
  * @since 1.0
  * @author shake
  */
-class BridgeNotification(val bridge: Bridge) {
+class BridgeNotification(val config: DuracloudConfig) {
 
     /**
      * Notify a Duracloud [Bridge] that a [RestoreTuple] has been successfully staged for return
@@ -19,6 +20,7 @@ class BridgeNotification(val bridge: Bridge) {
      * @return The updated [Result] from trying to notify the [Bridge]
      */
     fun notify(result: Result.Success): Result {
+        val bridge = config.bridge()
         val restore = result.data.restore
         val errorMsg = "Error completing Bridge API call"
         val exceptionMsg = "Exception communicating with the Bridge"

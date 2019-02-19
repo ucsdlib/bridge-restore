@@ -19,7 +19,7 @@ fun fetchRestorations(config: DbConfig): List<RestoreTuple> {
     val restoreTable = Tables.RESTORATION
 
     // what happens if there's an exception?
-    return DSL.using(config.url, config.username, config.password).use { ctx ->
+    return DSL.using(config.url(), config.username(), config.password()).use { ctx ->
         ctx.select().from(restoreTable)
                 .join(snapshotTable)
                 .on(restoreTable.SNAPSHOT_ID.eq(snapshotTable.ID)

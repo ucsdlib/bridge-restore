@@ -5,7 +5,6 @@ import org.chronopolis.bridge.models.Result
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.Paths
 
 /**
  * Class which is sort of not needed but handles staging of [RestoreTuple]s
@@ -28,11 +27,11 @@ class FileService(private val storageConfig: StorageConfig) {
     fun stageForBridge(restoreTuple: RestoreTuple): Result {
         val restore = restoreTuple.restore
         val snapshot = restoreTuple.snapshot
-        val duracloud = storageConfig.duracloud
-        val chronopolis = storageConfig.chronopolis
+        val duracloud = storageConfig.duracloud()
+        val chronopolis = storageConfig.chronopolis()
 
-        val restoreDirectory = Paths.get(duracloud, restore.restorationId)
-        val preservationDirectory = Paths.get(chronopolis, snapshot.memberId, snapshot.name)
+        val restoreDirectory = duracloud.resolve(restore.restorationId)
+        val preservationDirectory = chronopolis.resolve(snapshot.memberId).resolve(snapshot.name)
 
         if (!restoreDirectory.toFile().exists()) {
             return Result.Error(restoreTuple, "Directory $restoreDirectory does not exist")

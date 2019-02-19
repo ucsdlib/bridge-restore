@@ -44,7 +44,7 @@ class ReportingService(val smtpConfig: SmtpConfig) {
         val session = Session.getDefaultInstance(properties)
         val message = MimeMessage(session)
         message.setFrom(smtpFrom)
-        message.setRecipients(Message.RecipientType.TO, smtpConfig.to)
+        message.setRecipients(Message.RecipientType.TO, smtpConfig.to())
 
         message.subject = "Duracloud Bridge Restoration Report"
         message.setContent(body, "text/plain")
