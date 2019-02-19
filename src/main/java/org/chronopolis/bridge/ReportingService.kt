@@ -2,7 +2,7 @@ package org.chronopolis.bridge
 
 import org.chronopolis.bridge.config.SmtpConfig
 import org.chronopolis.bridge.models.Result
-import java.time.ZonedDateTime
+import java.time.LocalDateTime
 import java.util.Properties
 import javax.mail.Message
 import javax.mail.Session
@@ -25,17 +25,18 @@ class ReportingService(val smtpConfig: SmtpConfig) {
      * @param results a list of [Result]s to check and report on
      */
     fun report(results: Sequence<Result>) {
+        val prefix = "Report for ${LocalDateTime.now()}\n"
         val body = results.joinToString(
-                prefix = "Report for ${ZonedDateTime.now().toLocalDate()}\n",
                 separator = "\n------------------------------------------------------------\n",
                 transform = Result::message)
 
         if (body.isNotBlank()) {
-            send(body)
+            send(prefix, body)
         }
     }
 
-    private fun send(body: String) {
+    private fun send(prefix: String, body: String) {
+        println("sending bridge restore report")
         // push to property?
         val smtpFrom = "chronopolis-mail@umiacs.umd.edu"
 
@@ -47,7 +48,7 @@ class ReportingService(val smtpConfig: SmtpConfig) {
         message.setRecipients(Message.RecipientType.TO, smtpConfig.to())
 
         message.subject = "Duracloud Bridge Restoration Report"
-        message.setContent(body, "text/plain")
+        message.setContent(prefix + body, "text/plain")
         Transport.send(message)
     }
 
