@@ -13,16 +13,16 @@ interface SmtpConfig {
  */
 class PropertiesSmtpConfig() : SmtpConfig {
 
+    private val to: String
+    private val send: Boolean
+
     init {
-
+        to = System.getProperty("smtp.to")
+        val sendString = System.getProperty("smtp.send")
+        send = sendString.toBoolean()
     }
 
-    override fun to(): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun send(): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun to() = to
+    override fun send() = send
 
 }

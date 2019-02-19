@@ -24,16 +24,8 @@ class PropertiesDbConfig() : DbConfig {
         password = System.getProperty("db.password")
     }
 
-    override fun url(): String {
-        TODO("not implemented")
-    }
-
-    override fun username(): String {
-        TODO("not implemented")
-    }
-
-    override fun password(): String {
-        TODO("not implemented")
-    }
+    override fun url() = url
+    override fun username() = username
+    override fun password() = password
 
 }
