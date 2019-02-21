@@ -74,7 +74,7 @@ class BridgeNotificationTest {
         val notifier = BridgeNotification(configMock)
 
         val id = RestoreId("bridge-notification-exception")
-        val rc = RestoreComplete(BridgeStatus.WAITING_FOR_DPN, details)
+        val rc = RestoreComplete(BridgeStatus.RETRIEVING_FROM_STORAGE, details)
 
         every { configMock.bridge() } returns bridgeMock
         every { bridgeMock.completeRestoreById(id) } returns ExceptingCallWrapper(rc)

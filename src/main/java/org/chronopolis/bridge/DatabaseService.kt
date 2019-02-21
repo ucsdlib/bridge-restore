@@ -23,7 +23,7 @@ fun fetchRestorations(config: DbConfig): List<RestoreTuple> {
         ctx.select().from(restoreTable)
                 .join(snapshotTable)
                 .on(restoreTable.SNAPSHOT_ID.eq(snapshotTable.ID)
-                        .and(restoreTable.STATUS.eq(BridgeStatus.WAITING_FOR_DPN.name)))
+                        .and(restoreTable.STATUS.eq(BridgeStatus.RETRIEVING_FROM_STORAGE.name)))
                 .orderBy(restoreTable.ID.asc())
                 .fetch()
     }.map { record ->
