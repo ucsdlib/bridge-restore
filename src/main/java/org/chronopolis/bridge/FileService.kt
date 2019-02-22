@@ -65,18 +65,24 @@ class FileService(private val storageConfig: StorageConfig) {
 
         val error: Result? = files.asSequence()
                 .map { it ->
+                    val errorMessage = "Exception staging file ${it.key} for Bridge"
                     try {
                         // might be a better way to do this but it works ok
-                        Files.createSymbolicLink(it.value, it.key)
-                        Result.Success(restoreTuple)
+                        if (it.key.toFile().exists()) {
+                            Files.createSymbolicLink(it.value, it.key)
+                            Result.Success(restoreTuple)
+                        } else {
+                            val exception = IOException("${it.key} does not exist")
+                            Result.ErrorException(restoreTuple, errorMessage, exception)
+                        }
                     } catch (e: IOException) {
-                        val message = "Exception staging file ${it.key} for Bridge"
-                        Result.ErrorException(restoreTuple, message, e)
+                        Result.ErrorException(restoreTuple, errorMessage, e)
                     }
                 }
                 // short circuit if we result in an exception
                 .firstOrNull { it is Result.ErrorException }
 
+        // do we want to do any cleanup when an error is thrown?
         return when (error) {
             is Result.ErrorException -> error
             else -> Result.Success(restoreTuple)
