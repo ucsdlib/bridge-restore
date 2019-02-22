@@ -7,17 +7,25 @@ import org.chronopolis.bridge.db.tables.records.RestorationRecord
 import org.chronopolis.bridge.db.tables.records.SnapshotRecord
 import org.chronopolis.bridge.models.Result
 import org.junit.jupiter.api.Test
+import java.io.File
 import java.nio.file.Path
-import java.nio.file.Paths
 
+/**
+ * Tests for the [FileService]
+ *
+ * Just basic success/failure stuff. Might update the duracloud root to be a temporary folder
+ * instead of using target/duracloud/... because it tends to be messy.
+ *
+ * @author shake
+ */
 class FileServiceTest {
 
     private val member = "file-service-test"
 
-    private val dcRoot = Paths.get(this.javaClass.classLoader.getResource("duracloud").toURI().path)
-    private val chronRoot = Paths.get(this.javaClass.classLoader.getResource("chronopolis").toURI().path)
+    private val dcRoot = File("src/test/resources/duracloud").absoluteFile.toPath()
+    private val chronRoot = File("src/test/resources/chronopolis").absoluteFile.toPath()
     private val storageConfig = TestStorageConfig(dcRoot, chronRoot)
-    val fileService = FileService(storageConfig)
+    private val fileService = FileService(storageConfig)
 
     @Test
     fun stageSuccess() {
@@ -69,15 +77,6 @@ class FileServiceTest {
         val result = fileService.stageForBridge(restoreTuple)
 
         assertThat(result).isInstanceOf(Result.ErrorException::class.javaObjectType)
-
-        val restoreRoot = dcRoot.resolve(restoreName)
-        Assertions.assertThat(restoreRoot.resolve("data")).isDirectory()
-        Assertions.assertThat(restoreRoot.resolve("data").resolve("hw")).isRegularFile()
-        Assertions.assertThat(restoreRoot.resolve("manifest-md5.txt")).isRegularFile()
-        Assertions.assertThat(restoreRoot.resolve("manifest-sha256.txt")).isRegularFile()
-        Assertions.assertThat(restoreRoot.resolve(".collection-snapshot.properties")).isRegularFile()
-        Assertions.assertThat(restoreRoot.resolve("content-properties.json")).isRegularFile()
-
         cleanup(restoreName)
     }
 
