@@ -67,7 +67,7 @@ class FileService(private val storageConfig: StorageConfig) {
                 .map { it ->
                     try {
                         // might be a better way to do this but it works ok
-                        Files.createSymbolicLink(it.key, it.value)
+                        Files.createSymbolicLink(it.value, it.key)
                         Result.Success(restoreTuple)
                     } catch (e: IOException) {
                         val message = "Exception staging file ${it.key} for Bridge"
