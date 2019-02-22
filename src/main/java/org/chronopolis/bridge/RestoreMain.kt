@@ -20,6 +20,7 @@ class Application : DKodeinAware {
         // to system properties? probably overkill at the moment but could be fun.
         import(configModule)
 
+        bind<SmtpSender>() with singleton { SmtpSender(instance()) }
         bind<FileService>() with singleton { FileService(instance()) }
         bind<ReportingService>() with singleton { ReportingService(instance()) }
         bind<BridgeNotification>() with singleton { BridgeNotification(instance()) }
