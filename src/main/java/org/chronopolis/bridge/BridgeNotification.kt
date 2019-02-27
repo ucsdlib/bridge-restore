@@ -3,6 +3,8 @@ package org.chronopolis.bridge
 import org.chronopolis.bridge.config.DuracloudConfig
 import org.chronopolis.bridge.models.RestoreId
 import org.chronopolis.bridge.models.RestoreResult
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * Class for Notifications to a [Bridge]
@@ -11,6 +13,7 @@ import org.chronopolis.bridge.models.RestoreResult
  * @author shake
  */
 class BridgeNotification(val config: DuracloudConfig) {
+    private val log: Logger = LoggerFactory.getLogger(BridgeNotification::class.java)
 
     /**
      * Notify a Duracloud [Bridge] that a [RestoreTuple] has been successfully staged for return
@@ -29,11 +32,15 @@ class BridgeNotification(val config: DuracloudConfig) {
         return try {
             val response = call.execute()
             if (response.isSuccessful) {
+                log.info("[{}] Completed Bridge Notification", restore.restorationId)
                 RestoreResult.Success(result.data)
             } else {
+                log.warn("[{}] $errorMsg {} {}",
+                        restore.restorationId, response.code(), response.message())
                 RestoreResult.Error(result.data, errorMsg + " ${response.code()} ${response.message()}")
             }
         } catch (e: Exception) {
+            log.warn("[{}] $exceptionMsg", restore.restorationId, e)
             RestoreResult.ErrorException(result.data, exceptionMsg, e)
         }
     }

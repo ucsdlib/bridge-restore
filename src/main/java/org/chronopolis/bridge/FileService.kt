@@ -2,6 +2,8 @@ package org.chronopolis.bridge
 
 import org.chronopolis.bridge.config.StorageConfig
 import org.chronopolis.bridge.models.RestoreResult
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
@@ -13,6 +15,7 @@ import java.nio.file.Path
  * @author shake
  */
 class FileService(private val storageConfig: StorageConfig) {
+    private val log: Logger = LoggerFactory.getLogger(FileService::class.java)
 
     /**
      * Using a [RestoreTuple], determine where data is located and stage a copy for the [Bridge]
@@ -34,10 +37,12 @@ class FileService(private val storageConfig: StorageConfig) {
         val preservationDirectory = chronopolis.resolve(snapshot.memberId).resolve(snapshot.name)
 
         if (!restoreDirectory.toFile().exists()) {
+            log.error("[{}] {} does not exist!", restore.restorationId, restoreDirectory)
             return RestoreResult.Error(restoreTuple, "Directory $restoreDirectory does not exist")
         }
 
         if (!preservationDirectory.toFile().exists()) {
+            log.error("[{}] {} does not exist!", restore.restorationId, preservationDirectory)
             return RestoreResult.Error(restoreTuple, "Directory $preservationDirectory does not exist")
         }
 
@@ -65,18 +70,21 @@ class FileService(private val storageConfig: StorageConfig) {
 
         val error: RestoreResult? = files.asSequence()
                 .map { it ->
-                    val errorMessage = "Exception staging file ${it.key} for Bridge"
+                    val errorMessage = "${it.key} does not exist!"
+                    val exceptionMessage = "Exception staging file ${it.key} for Bridge"
                     try {
                         // might be a better way to do this but it works ok
                         if (it.key.toFile().exists()) {
                             Files.createSymbolicLink(it.value, it.key)
                             RestoreResult.Success(restoreTuple)
                         } else {
+                            log.error("[{}] $errorMessage", restoreTuple.restore.restorationId)
                             val exception = IOException("${it.key} does not exist")
                             RestoreResult.ErrorException(restoreTuple, errorMessage, exception)
                         }
                     } catch (e: IOException) {
-                        RestoreResult.ErrorException(restoreTuple, errorMessage, e)
+                        log.error("[{}] $exceptionMessage", restoreTuple.restore.restorationId, e)
+                        RestoreResult.ErrorException(restoreTuple, exceptionMessage, e)
                     }
                 }
                 // short circuit if we result in an exception

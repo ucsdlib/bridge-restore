@@ -1,6 +1,8 @@
 package org.chronopolis.bridge
 
 import org.chronopolis.bridge.models.RestoreResult
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 
 /**
@@ -12,6 +14,7 @@ import java.time.LocalDateTime
  * @since 1.0
  */
 class ReportingService(private val smtpSender: SmtpSender) {
+    private val log: Logger = LoggerFactory.getLogger(ReportingService::class.java)
 
     /**
      * Create and send a report of operations for the current run
@@ -26,6 +29,8 @@ class ReportingService(private val smtpSender: SmtpSender) {
 
         if (body.isNotBlank()) {
             smtpSender.send(prefix, body)
+        } else {
+            log.debug("Skipping result reporting")
         }
     }
 
