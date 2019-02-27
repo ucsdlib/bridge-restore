@@ -1,5 +1,6 @@
 package org.chronopolis.bridge
 
+import io.mockk.clearMocks
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
@@ -17,15 +18,13 @@ import org.chronopolis.test.support.ExceptingCallWrapper
 import org.junit.jupiter.api.Test
 
 class BridgeNotificationTest {
-
+    private val bridgeMock: Bridge = mockk()
+    private val configMock: DuracloudConfig = mockk()
+    private val notifier = BridgeNotification(configMock)
     private val details = "details"
 
     @Test
     fun successfulCallReturnsSuccess() {
-        val bridgeMock: Bridge = mockk()
-        val configMock: DuracloudConfig = mockk()
-        val notifier = BridgeNotification(configMock)
-
         val id = RestoreId("bridge-notification-success")
         val rc = RestoreComplete(BridgeStatus.RESTORATION_COMPLETE, details)
         every { configMock.bridge() } returns bridgeMock
@@ -42,14 +41,11 @@ class BridgeNotificationTest {
         verify(exactly = 1) { configMock.bridge() }
         verify(exactly = 1) { bridgeMock.completeRestoreById(id) }
         confirmVerified(configMock, bridgeMock)
+        clearMocks(configMock, bridgeMock)
     }
 
     @Test
     fun httpErrorReturnsError() {
-        val bridgeMock: Bridge = mockk()
-        val configMock: DuracloudConfig = mockk()
-        val notifier = BridgeNotification(configMock)
-
         val id = RestoreId("bridge-notification-exception")
         val rc = RestoreComplete(BridgeStatus.CANCELLED, details)
 
@@ -65,13 +61,11 @@ class BridgeNotificationTest {
         verify(exactly = 1) { configMock.bridge() }
         verify(exactly = 1) { bridgeMock.completeRestoreById(id) }
         confirmVerified(configMock, bridgeMock)
+        clearMocks(configMock, bridgeMock)
     }
 
     @Test
     fun exceptedCallReturnsException() {
-        val bridgeMock: Bridge = mockk()
-        val configMock: DuracloudConfig = mockk()
-        val notifier = BridgeNotification(configMock)
 
         val id = RestoreId("bridge-notification-exception")
         val rc = RestoreComplete(BridgeStatus.RETRIEVING_FROM_STORAGE, details)
@@ -88,6 +82,7 @@ class BridgeNotificationTest {
         verify(exactly = 1) { configMock.bridge() }
         verify(exactly = 1) { bridgeMock.completeRestoreById(id) }
         confirmVerified(configMock, bridgeMock)
+        clearMocks(configMock, bridgeMock)
     }
 
 }
