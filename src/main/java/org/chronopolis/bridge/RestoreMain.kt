@@ -2,7 +2,7 @@ package org.chronopolis.bridge
 
 import org.chronopolis.bridge.config.DbConfig
 import org.chronopolis.bridge.config.configModule
-import org.chronopolis.bridge.models.Result
+import org.chronopolis.bridge.models.RestoreResult
 import org.kodein.di.DKodeinAware
 import org.kodein.di.Kodein
 import org.kodein.di.generic.bind
@@ -35,9 +35,9 @@ class Application : DKodeinAware {
         println("Restore Client version whatever")
         val results = fetchRestorations(dbConfig).asSequence()
                 .map(fileService::stageForBridge)
-                .map { it: Result ->
+                .map { it: RestoreResult ->
                     when (it) {
-                        is Result.Success -> bridgeNotification.notify(it)
+                        is RestoreResult.Success -> bridgeNotification.notify(it)
                         else -> it
                     }
                 }

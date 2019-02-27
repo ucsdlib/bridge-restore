@@ -10,7 +10,7 @@ import org.chronopolis.bridge.db.tables.records.SnapshotRecord
 import org.chronopolis.bridge.models.BridgeStatus
 import org.chronopolis.bridge.models.RestoreComplete
 import org.chronopolis.bridge.models.RestoreId
-import org.chronopolis.bridge.models.Result
+import org.chronopolis.bridge.models.RestoreResult
 import org.chronopolis.test.support.CallWrapper
 import org.chronopolis.test.support.ErrorCallWrapper
 import org.chronopolis.test.support.ExceptingCallWrapper
@@ -36,7 +36,7 @@ class BridgeNotificationTest {
         val snapshot = SnapshotRecord()
         val restoration = RestorationRecord()
         restoration.restorationId = id.id
-        val result = Result.Success(RestoreTuple(restoration, snapshot))
+        val result = RestoreResult.Success(RestoreTuple(restoration, snapshot))
         notifier.notify(result)
 
         verify(exactly = 1) { configMock.bridge() }
@@ -59,7 +59,7 @@ class BridgeNotificationTest {
         val snapshot = SnapshotRecord()
         val restoration = RestorationRecord()
         restoration.restorationId = id.id
-        val result = Result.Success(RestoreTuple(restoration, snapshot))
+        val result = RestoreResult.Success(RestoreTuple(restoration, snapshot))
         notifier.notify(result)
 
         verify(exactly = 1) { configMock.bridge() }
@@ -82,7 +82,7 @@ class BridgeNotificationTest {
         val snapshot = SnapshotRecord()
         val restoration = RestorationRecord()
         restoration.restorationId = id.id
-        val result = Result.Success(RestoreTuple(restoration, snapshot))
+        val result = RestoreResult.Success(RestoreTuple(restoration, snapshot))
         notifier.notify(result)
 
         verify(exactly = 1) { configMock.bridge() }

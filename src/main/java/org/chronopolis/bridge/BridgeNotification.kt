@@ -2,7 +2,7 @@ package org.chronopolis.bridge
 
 import org.chronopolis.bridge.config.DuracloudConfig
 import org.chronopolis.bridge.models.RestoreId
-import org.chronopolis.bridge.models.Result
+import org.chronopolis.bridge.models.RestoreResult
 
 /**
  * Class for Notifications to a [Bridge]
@@ -16,10 +16,10 @@ class BridgeNotification(val config: DuracloudConfig) {
      * Notify a Duracloud [Bridge] that a [RestoreTuple] has been successfully staged for return
      * into Duracloud
      *
-     * @param result A successful [Result] from staging data
-     * @return The updated [Result] from trying to notify the [Bridge]
+     * @param result A successful [RestoreResult] from staging data
+     * @return The updated [RestoreResult] from trying to notify the [Bridge]
      */
-    fun notify(result: Result.Success): Result {
+    fun notify(result: RestoreResult.Success): RestoreResult {
         val bridge = config.bridge()
         val restore = result.data.restore
         val errorMsg = "Error completing Bridge API call"
@@ -29,12 +29,12 @@ class BridgeNotification(val config: DuracloudConfig) {
         return try {
             val response = call.execute()
             if (response.isSuccessful) {
-                Result.Success(result.data)
+                RestoreResult.Success(result.data)
             } else {
-                Result.Error(result.data, errorMsg + " ${response.code()} ${response.message()}")
+                RestoreResult.Error(result.data, errorMsg + " ${response.code()} ${response.message()}")
             }
         } catch (e: Exception) {
-            Result.ErrorException(result.data, exceptionMsg, e)
+            RestoreResult.ErrorException(result.data, exceptionMsg, e)
         }
     }
 }

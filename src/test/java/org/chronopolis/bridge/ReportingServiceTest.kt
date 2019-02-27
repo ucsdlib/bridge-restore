@@ -9,7 +9,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.chronopolis.bridge.db.tables.records.RestorationRecord
 import org.chronopolis.bridge.db.tables.records.SnapshotRecord
-import org.chronopolis.bridge.models.Result
+import org.chronopolis.bridge.models.RestoreResult
 import org.junit.jupiter.api.Test
 
 class ReportingServiceTest {
@@ -26,7 +26,7 @@ class ReportingServiceTest {
 
         every { sender.send(any(), any()) } just Runs
         
-        reportingService.report(sequenceOf(Result.Success(tuple)))
+        reportingService.report(sequenceOf(RestoreResult.Success(tuple)))
 
         verify(exactly = 1) { sender.send(any(), any()) }
         confirmVerified(sender)

@@ -1,6 +1,6 @@
 package org.chronopolis.bridge
 
-import org.chronopolis.bridge.models.Result
+import org.chronopolis.bridge.models.RestoreResult
 import java.time.LocalDateTime
 
 /**
@@ -16,13 +16,13 @@ class ReportingService(private val smtpSender: SmtpSender) {
     /**
      * Create and send a report of operations for the current run
      *
-     * @param results a list of [Result]s to check and report on
+     * @param results a list of [RestoreResult]s to check and report on
      */
-    fun report(results: Sequence<Result>) {
+    fun report(results: Sequence<RestoreResult>) {
         val prefix = "Report for ${LocalDateTime.now()}\n"
         val body = results.joinToString(
                 separator = "\n------------------------------------------------------------\n",
-                transform = Result::message)
+                transform = RestoreResult::message)
 
         if (body.isNotBlank()) {
             smtpSender.send(prefix, body)

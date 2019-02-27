@@ -1,7 +1,7 @@
 package org.chronopolis.bridge
 
 import org.chronopolis.bridge.config.StorageConfig
-import org.chronopolis.bridge.models.Result
+import org.chronopolis.bridge.models.RestoreResult
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
@@ -18,13 +18,13 @@ class FileService(private val storageConfig: StorageConfig) {
      * Using a [RestoreTuple], determine where data is located and stage a copy for the [Bridge]
      *
      * If either the directory for the Duracloud Bridge or Chronopolis Preservation does not exist,
-     * a [Result.Error] will be returned. If any of the required files cannot have a link made, a
-     * [Result.ErrorException] will be returned. When all operations are successful, a
-     * [Result.Success] is returned.
+     * a [RestoreResult.Error] will be returned. If any of the required files cannot have a link made, a
+     * [RestoreResult.ErrorException] will be returned. When all operations are successful, a
+     * [RestoreResult.Success] is returned.
      *
      * @param restoreTuple A tuple containing the Restoration and Snapshot information
      */
-    fun stageForBridge(restoreTuple: RestoreTuple): Result {
+    fun stageForBridge(restoreTuple: RestoreTuple): RestoreResult {
         val restore = restoreTuple.restore
         val snapshot = restoreTuple.snapshot
         val duracloud = storageConfig.duracloud()
@@ -34,11 +34,11 @@ class FileService(private val storageConfig: StorageConfig) {
         val preservationDirectory = chronopolis.resolve(snapshot.memberId).resolve(snapshot.name)
 
         if (!restoreDirectory.toFile().exists()) {
-            return Result.Error(restoreTuple, "Directory $restoreDirectory does not exist")
+            return RestoreResult.Error(restoreTuple, "Directory $restoreDirectory does not exist")
         }
 
         if (!preservationDirectory.toFile().exists()) {
-            return Result.Error(restoreTuple, "Directory $preservationDirectory does not exist")
+            return RestoreResult.Error(restoreTuple, "Directory $preservationDirectory does not exist")
         }
 
         return createLinks(restoreTuple, restoreDirectory, preservationDirectory)
@@ -46,7 +46,7 @@ class FileService(private val storageConfig: StorageConfig) {
 
     private fun createLinks(restoreTuple: RestoreTuple,
                             restoreDirectory: Path,
-                            preservationDirectory: Path): Result {
+                            preservationDirectory: Path): RestoreResult {
         // constants which we can just hold here maybe, probably allocates them on the stack
         val data = "data"
         val md5 = "manifest-md5.txt"
@@ -63,29 +63,29 @@ class FileService(private val storageConfig: StorageConfig) {
                 Pair(preservationDirectory.resolve(data), restoreDirectory.resolve(data))
         )
 
-        val error: Result? = files.asSequence()
+        val error: RestoreResult? = files.asSequence()
                 .map { it ->
                     val errorMessage = "Exception staging file ${it.key} for Bridge"
                     try {
                         // might be a better way to do this but it works ok
                         if (it.key.toFile().exists()) {
                             Files.createSymbolicLink(it.value, it.key)
-                            Result.Success(restoreTuple)
+                            RestoreResult.Success(restoreTuple)
                         } else {
                             val exception = IOException("${it.key} does not exist")
-                            Result.ErrorException(restoreTuple, errorMessage, exception)
+                            RestoreResult.ErrorException(restoreTuple, errorMessage, exception)
                         }
                     } catch (e: IOException) {
-                        Result.ErrorException(restoreTuple, errorMessage, e)
+                        RestoreResult.ErrorException(restoreTuple, errorMessage, e)
                     }
                 }
                 // short circuit if we result in an exception
-                .firstOrNull { it is Result.ErrorException }
+                .firstOrNull { it is RestoreResult.ErrorException }
 
         // do we want to do any cleanup when an error is thrown?
         return when (error) {
-            is Result.ErrorException -> error
-            else -> Result.Success(restoreTuple)
+            is RestoreResult.ErrorException -> error
+            else -> RestoreResult.Success(restoreTuple)
         }
     }
 }

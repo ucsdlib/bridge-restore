@@ -5,7 +5,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.chronopolis.bridge.config.StorageConfig
 import org.chronopolis.bridge.db.tables.records.RestorationRecord
 import org.chronopolis.bridge.db.tables.records.SnapshotRecord
-import org.chronopolis.bridge.models.Result
+import org.chronopolis.bridge.models.RestoreResult
 import org.junit.jupiter.api.Test
 import java.io.File
 import java.nio.file.Path
@@ -46,7 +46,7 @@ class FileServiceTest {
         // finished setup, now test + assertions
         val result = fileService.stageForBridge(restoreTuple)
 
-        assertThat(result).isInstanceOf(Result.Success::class.javaObjectType)
+        assertThat(result).isInstanceOf(RestoreResult.Success::class.javaObjectType)
 
         val restoreRoot = dcRoot.resolve(restoreName)
         Assertions.assertThat(restoreRoot.resolve("data")).isDirectory()
@@ -76,7 +76,7 @@ class FileServiceTest {
         // finished setup, now test + assertions
         val result = fileService.stageForBridge(restoreTuple)
 
-        assertThat(result).isInstanceOf(Result.ErrorException::class.javaObjectType)
+        assertThat(result).isInstanceOf(RestoreResult.ErrorException::class.javaObjectType)
         cleanup(restoreName)
     }
 
@@ -97,7 +97,7 @@ class FileServiceTest {
         // finished setup, now test + assertions
         val result = fileService.stageForBridge(restoreTuple)
 
-        assertThat(result).isInstanceOf(Result.Error::class.javaObjectType)
+        assertThat(result).isInstanceOf(RestoreResult.Error::class.javaObjectType)
     }
 
     @Test
@@ -117,7 +117,7 @@ class FileServiceTest {
         // finished setup, now test + assertions
         val result = fileService.stageForBridge(restoreTuple)
 
-        assertThat(result).isInstanceOf(Result.Error::class.javaObjectType)
+        assertThat(result).isInstanceOf(RestoreResult.Error::class.javaObjectType)
     }
 
     private fun cleanup(name: String) {
