@@ -56,6 +56,7 @@ class Application : DKodeinAware {
                 }
 
         reportingService.report(results)
+        log.info("Closing Restore client")
     }
 
     private fun printConfig() {
