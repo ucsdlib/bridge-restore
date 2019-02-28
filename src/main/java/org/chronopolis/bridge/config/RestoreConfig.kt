@@ -8,6 +8,7 @@ import java.io.File
 data class ConfigDto(val db: YamlDbConfig,
                      val bridge: YamlDuracloudConfig,
                      val smtp: YamlSmtpConfig,
+                     val log: LoggingConfig,
                      val storage: YamlStorageConfig)
 
 interface Validated {
@@ -17,6 +18,7 @@ interface Validated {
 interface RestoreConfig {
     fun dbConfig(): DbConfig
     fun smtpConfig(): SmtpConfig
+    fun loggingConfig(): LoggingConfig
     fun storageConfig(): StorageConfig
     fun duracloudConfig(): DuracloudConfig
 }
@@ -41,6 +43,7 @@ class YamlConfig() : RestoreConfig {
 
     override fun dbConfig() = dto.db
     override fun smtpConfig() = dto.smtp
+    override fun loggingConfig() = dto.log
     override fun storageConfig() = dto.storage
     override fun duracloudConfig() = dto.bridge
 }

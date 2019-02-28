@@ -14,6 +14,7 @@ val configModule = Kodein.Module("configModule") {
     bind<DuracloudConfig>() with provider { instance<RestoreConfig>().duracloudConfig() }
 
     onReady {
+        instance<RestoreConfig>().loggingConfig().setup()
         val dbConfig = instance<DbConfig>()
         dbConfig.validate()
 
