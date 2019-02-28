@@ -29,7 +29,7 @@ class YamlStorageConfig(private val duracloud: String,
         }
 
         val chron = chronopolis().toFile()
-        if (!chron.isFile) {
+        if (!chron.isDirectory) {
             throw java.lang.IllegalStateException("$chron must be a directory")
         }
         if (!chron.canRead()) {
