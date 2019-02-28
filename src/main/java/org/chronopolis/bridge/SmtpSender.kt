@@ -1,6 +1,9 @@
 package org.chronopolis.bridge
 
 import org.chronopolis.bridge.config.SmtpConfig
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import java.time.LocalDateTime
 import java.util.Properties
 import javax.mail.Message
 import javax.mail.Session
@@ -15,12 +18,11 @@ import javax.mail.internet.MimeMessage
  * @author shake
  */
 class SmtpSender(private val smtpConfig: SmtpConfig) {
-
+    private val log: Logger = LoggerFactory.getLogger(SmtpSender::class.java)
     private val title = "Duracloud Bridge Restoration Report"
 
     fun send(prefix: String, body: String) {
-        println("sending bridge restore report")
-        // push to property?
+        log.info("Sending report for run on ${LocalDateTime.now()}")
         val smtpFrom = smtpConfig.from()
 
         val properties = Properties()
