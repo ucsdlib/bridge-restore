@@ -133,4 +133,10 @@ class TestStorageConfig(private val duracloud: Path,
                         private val chronopolis: Path) : StorageConfig {
     override fun duracloud() = duracloud
     override fun chronopolis() = chronopolis
+    override fun validate() {
+        if (!duracloud.toFile().isDirectory || !chronopolis.toFile().isDirectory ||
+                !duracloud.toFile().canWrite() || !chronopolis.toFile().canRead()) {
+            throw IllegalStateException("error in test setup")
+        }
+    }
 }
