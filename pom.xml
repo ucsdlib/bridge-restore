@@ -59,7 +59,7 @@
 
         <dependency>
             <groupId>com.squareup.retrofit2</groupId>
-            <artifactId>converter-moshi</artifactId>
+            <artifactId>converter-jackson</artifactId>
             <version>${retrofit.version}</version>
         </dependency>
 

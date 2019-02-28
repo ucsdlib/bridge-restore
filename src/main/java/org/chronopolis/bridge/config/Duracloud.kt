@@ -4,7 +4,7 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import org.chronopolis.bridge.Bridge
 import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.converter.jackson.JacksonConverterFactory
 import java.util.Base64
 
 /**
@@ -37,7 +37,7 @@ class YamlDuracloudConfig(private val endpoint: String,
                 .build()
         val retrofit = Retrofit.Builder().baseUrl(endpoint)
                 .client(client)
-                .addConverterFactory(MoshiConverterFactory.create())
+                .addConverterFactory(JacksonConverterFactory.create())
                 .build()
 
         return retrofit.create(Bridge::class.java)
