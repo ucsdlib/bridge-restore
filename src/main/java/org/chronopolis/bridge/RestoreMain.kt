@@ -67,7 +67,7 @@ class Application : DKodeinAware {
         log.debug("  duracloud.username: ${duracloudConfig.bridgeUsername()}")
         log.debug("  duracloud.password: [scrubbed]")
         log.debug("  smtp.to: ${smtpConfig.to()}")
-        log.debug("  smtp.from: ")
+        log.debug("  smtp.from: ${smtpConfig.from()}")
         log.debug("  smtp.send: ${smtpConfig.send()}")
         log.debug("  storage.duracloud: ${storageConfig.duracloud()}")
         log.debug("  storage.chronopolis: ${storageConfig.chronopolis()}")

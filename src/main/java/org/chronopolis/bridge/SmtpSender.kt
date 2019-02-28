@@ -21,7 +21,7 @@ class SmtpSender(private val smtpConfig: SmtpConfig) {
     fun send(prefix: String, body: String) {
         println("sending bridge restore report")
         // push to property?
-        val smtpFrom = "chronopolis-mail@umiacs.umd.edu"
+        val smtpFrom = smtpConfig.from()
 
         val properties = Properties()
         properties["mail.smtp.host"] = "localhost.localdomain"
