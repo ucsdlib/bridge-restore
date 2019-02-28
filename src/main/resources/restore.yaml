@@ -1,0 +1,22 @@
+db:
+  url: jdbc:mysql://localhost/bridge
+  username: mysql-user
+  password: mysql-pass
+
+bridge:
+  endpoint: http://localhost:8080/bridge
+  username: bridge
+  password: bridge
+
+smtp:
+  to: chronopolis-support-l@ucsd.edu
+  from: restore@chron-mail.umiacs.umd.edu
+  send: false
+
+storage:
+  duracloud: /restore/duracloud
+  chronopolis: /restore/chronopolis
+
+log:
+  file: restore.log
+  level: INFO
