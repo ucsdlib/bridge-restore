@@ -6,10 +6,10 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import java.io.File
 
 data class ConfigDto(val db: YamlDbConfig,
-                     val bridge: YamlDuracloudConfig,
-                     val smtp: YamlSmtpConfig,
                      val log: LoggingConfig,
-                     val storage: YamlStorageConfig)
+                     val smtp: YamlSmtpConfig,
+                     val storage: YamlStorageConfig,
+                     val bridge: YamlDuracloudConfig)
 
 interface Validated {
     fun validate()

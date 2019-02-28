@@ -34,9 +34,9 @@ class Application : DKodeinAware {
     }
 
     private val dbConfig: DbConfig = instance()
-    private val duracloudConfig: DuracloudConfig = instance()
     private val smtpConfig: SmtpConfig = instance()
     private val storageConfig: StorageConfig = instance()
+    private val duracloudConfig: DuracloudConfig = instance()
 
     private val fileService: FileService = instance()
     private val reportingService: ReportingService = instance()
