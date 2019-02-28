@@ -3,32 +3,37 @@ package org.chronopolis.bridge.config
 import java.nio.file.Path
 import java.nio.file.Paths
 
-interface StorageConfig {
-    fun duracloud(): Path
-    fun chronopolis(): Path
-}
-
 /**
  * Config for storage. Expected to be posix for now.
  *
  * @since 1.0
  * @author shake
  */
-class PropertiesStorageConfig() : StorageConfig {
-    private val duracloud: Path
-    private val chronopolis: Path
+interface StorageConfig : Validated {
+    fun duracloud(): Path
+    fun chronopolis(): Path
+}
 
-    init {
-        val dcPath = System.getProperty("storage.duracloud")
-        val chronPath = System.getProperty("storage.chronopolis")
+class YamlStorageConfig(private val duracloud: String,
+                        private val chronopolis: String) : StorageConfig {
+    override fun duracloud() = Paths.get(duracloud)
+    override fun chronopolis() = Paths.get(chronopolis)
 
-        duracloud = Paths.get(dcPath)
-        chronopolis = Paths.get(chronPath)
+    override fun validate() {
+        val dc = duracloud().toFile()
+        if (!dc.exists() || !dc.isDirectory) {
+            throw IllegalStateException("$dc must be a directory")
+        }
+        if (!dc.canRead() || !dc.canWrite()) {
+            throw java.lang.IllegalStateException("$dc is not rw")
+        }
 
-        // validatePath(duracloud)
-        // validatePath(chronopolis)
+        val chron = chronopolis().toFile()
+        if (!chron.isFile) {
+            throw java.lang.IllegalStateException("$chron must be a directory")
+        }
+        if (!chron.canRead()) {
+            throw java.lang.IllegalStateException("$chron not able to be read from")
+        }
     }
-
-    override fun duracloud() = duracloud
-    override fun chronopolis() = chronopolis
 }
