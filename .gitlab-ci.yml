@@ -27,6 +27,8 @@ variables:
   MYSQL_USER: jooq
   MYSQL_PASSWORD: jooq
 
+services:
+  - mariadb:10.4
 
 # Cache downloaded dependencies and plugins between builds.
 cache:
@@ -63,8 +65,6 @@ validate:jdk8:
 verify:jdk8:
   <<: *verify
   image: maven:3.3.9-jdk-8
-  services: 
-    - postgres:9
   artifacts:
     expire_in: 2 days
     untracked: true
@@ -88,8 +88,6 @@ deploy:jdk8:
     - develop
     - /^release-.*$/
   image: maven:3.3.9-jdk-8
-  services:
-    - mariadb:10.4
 
 .rpm: &rpm
   before_script:
@@ -101,8 +99,6 @@ deploy:jdk8:
     - develop
     - /^release-.*$/
   image: maven:3.3.9-jdk-8
-  services:
-    - mariadb:10.4
 
 rpm:
   <<: *rpm
