@@ -27,7 +27,7 @@ variables:
   MYSQL_DATABASE: bridge
   MYSQL_USER: jooq
   MYSQL_PASSWORD: jooq
-  MYSQL_RANDOM_ROOT_PASWORD: yes
+  MYSQL_RANDOM_ROOT_PASWORD: "yes"
 
 services:
   - mariadb:10.4
