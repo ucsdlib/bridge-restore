@@ -22,7 +22,7 @@ variables:
   # when running from the command line.
   # `installAtEnd` and `deployAtEnd`are only effective with recent version of the corresponding plugins.
   MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
-  DB_PROPERTIES: "-Ddb.url=jdbc:mysql//mariadb/bridge -Ddb.username=jooq -Ddb.password=jooq -Ddb.driver=com.mysql.cj.jdbc.Driver"
+  DB_PROPERTIES: "-Ddb.url=jdbc:mysql://mariadb/bridge -Ddb.username=jooq -Ddb.password=jooq -Ddb.driver=com.mysql.cj.jdbc.Driver"
   # Mysql Config
   MYSQL_DATABASE: bridge
   MYSQL_USER: jooq
