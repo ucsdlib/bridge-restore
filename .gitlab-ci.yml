@@ -27,7 +27,7 @@ variables:
   MYSQL_DATABASE: bridge
   MYSQL_USER: jooq
   MYSQL_PASSWORD: jooq
-  MYSQL_ROOT_PASWORD: a-very-secret-pw-jk-this-is-ci-only
+  MYSQL_ROOT_PASSWORD: a-very-secret-pw-jk-this-is-ci-only
 
 services:
   - mariadb:10.4
