@@ -22,10 +22,12 @@ variables:
   # when running from the command line.
   # `installAtEnd` and `deployAtEnd`are only effective with recent version of the corresponding plugins.
   MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
+  DB_PROPERTIES: "-Ddb.url=jdbc:mysql//mariadb/bridge -Ddb.username=jooq -Ddb.password=jooq -Ddb.driver=com.mysql.cj.jdbc.Driver"
   # Mysql Config
   MYSQL_DATABASE: bridge
   MYSQL_USER: jooq
   MYSQL_PASSWORD: jooq
+  MYSQL_RANDOM_ROOT_PASWORD: yes
 
 services:
   - mariadb:10.4
@@ -43,7 +45,7 @@ cache:
     - apt-get update -y
   stage: build
   script:
-    - 'mvn $MAVEN_CLI_OPTS test-compile'
+    - 'mvn $MAVEN_CLI_OPTS $DB_PROPERTIES test-compile'
 
 # For merge requests do not `deploy` but only run `verify`.
 # See https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
